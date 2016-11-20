@@ -2,7 +2,7 @@ Feature: Amazon Search functionality
 
   Scenario: Users can search for a specific item on Amazon
     Given a user goes to Amazon
-    When then search for "pens"
+    When they search for "pens"
     Then amazon should return results for "pens"
 
   Scenario Outline: Users search for a variety of items
@@ -11,9 +11,7 @@ Feature: Amazon Search functionality
     Then the results returned will display <query>
 
     Examples:
-      | query  |
-      | laptop |
-      | guitar |
-      | pants  |
-
-
+      |query|
+      |laptop|
+      |guitar|
+      |pants |

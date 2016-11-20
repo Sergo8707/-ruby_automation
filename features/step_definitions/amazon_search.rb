@@ -1,21 +1,15 @@
-require 'watir-webdriver'
-require 'cucumber'
-
 Given(/^a user goes to Amazon$/) do
-  @browser = Watir::Browser.new :chrome
-  @browser.goto "https://www.amazon.com"
+  @browser.goto "http://www.amazon.com"
 end
 
-When(/^then search for "([^"]*)"$/) do |arg|
+When(/^they search for "([^"]*)"$/) do |arg|
   @browser.text_field(:id => "twotabsearchtextbox").set "#{arg}"
   @browser.send_keys :return
 end
 
 Then(/^amazon should return results for "([^"]*)"$/) do |arg|
-  @browser.div(:id => "result_2").wait_until_present
-  page_output = @browser.div(:id => "resultsCol").text.include? "#{arg}"
-  assert (page_output == true)
-  @browser.close
+  @browser.li(:id => "result_2").wait_until_present
+  assert_it ('Verfied Amazon Results') { @browser.text.include? "#{arg}" }
 end
 
 When(/^the user looks for (.*)$/) do |query|
@@ -24,8 +18,20 @@ When(/^the user looks for (.*)$/) do |query|
 end
 
 Then(/^the results returned will display (.*)$/) do |query|
-  @browser.div(:id => "result_2").wait_until_present
-  page_output = @browser.div(:id => "resultsCol").text.include? "#{query}"
-  assert (page_output == true)
-  @browser.close
+  @browser.li(:id => "result_2").wait_until_present
+  assert_it ('Verfied Results Display') { @browser.text.include? "#{query}" }
+end
+
+Given(/^a user is at Google$/) do
+  @browser.goto "http://google.com/ncr"
+end
+
+When(/^they enter "([^"]*)" in the search box$/) do |arg|
+  @browser.text_field(:title => "Search").set "#{arg}"
+  @browser.send_keys :enter
+end
+
+Then(/^they will get results for "([^"]*)"$/) do |arg|
+  assert_it ('URL has the correct param') { @browser.url.include? "#{arg}" }
+  assert_it ('softheme appears on page results') { @browser.div(:id => "search").when_present "#{arg}"}
 end
